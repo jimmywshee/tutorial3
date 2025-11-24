@@ -15,6 +15,7 @@ class LoginPageModel with ChangeNotifier {
   String firstName = "";
 
   login(BuildContext context) {
+    print('testing');
     String username = usernameController!.value.text;
     String password = passwordController!.value.text;
 
@@ -28,8 +29,9 @@ class LoginPageModel with ChangeNotifier {
     if (loginFormValid) {
       Future<LoginResponse> response = performLoginPost(username, password);
       response.then((value) {
+        print('value'+ value.lastName);
         if (kDebugMode) {
-          firstName = value.firstName;
+          firstName = value.lastName;
         }
         notifyListeners();
         Navigator.push(

@@ -22,18 +22,18 @@ void main() {
     var usernameFind = find.byKey(const Key("username_text"));
     var passwordFind = find.byKey(const Key("password_text"));
     var loginBtnFind = find.byKey(const Key("login_btn"));
-    
+
     expect(usernameFind, findsOneWidget);
     expect(passwordFind, findsOneWidget);
     expect(loginBtnFind, findsOneWidget);
 
-    await tester.enterText(usernameFind, "atuny0");
-    await tester.enterText(passwordFind, "9uQFF1Lh");
+    await tester.enterText(usernameFind, "emilys");
+    await tester.enterText(passwordFind, "emilyspass");
 
     await tester.tap(loginBtnFind);
 
     await tester.pumpAndSettle(const Duration(seconds: 3));
-    var welcomeFind= find.textContaining("Logout");
+    var welcomeFind = find.textContaining("Logout");
 
     expect(welcomeFind, findsOneWidget);
   });

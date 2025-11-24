@@ -32,7 +32,7 @@ class LoginResponse {
     String lastName;
     String gender;
     String image;
-    String token;
+    String accessToken;
 
     LoginResponse({
         required this.id,
@@ -42,7 +42,7 @@ class LoginResponse {
         required this.lastName,
         required this.gender,
         required this.image,
-        required this.token,
+        required this.accessToken,
     });
 
     factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
@@ -53,7 +53,7 @@ class LoginResponse {
         lastName: json["lastName"],
         gender: json["gender"],
         image: json["image"],
-        token: json["token"],
+        accessToken: json["accessToken"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -64,6 +64,6 @@ class LoginResponse {
         "lastName": lastName,
         "gender": gender,
         "image": image,
-        "token": token,
+        "accessToken": accessToken,
     };
 }
