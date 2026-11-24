@@ -6,19 +6,18 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'package:tutorial3/main.dart';
-
-import 'test_helper.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   testWidgets('App Login with welcome page', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     // FlutterError.onError = ignoreOverflowErrors;
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const ProviderScope(child: MyApp()));
     var usernameFind = find.byKey(const Key("username_text"));
     var passwordFind = find.byKey(const Key("password_text"));
     var loginBtnFind = find.byKey(const Key("login_btn"));

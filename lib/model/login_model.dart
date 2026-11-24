@@ -2,8 +2,6 @@
 //
 //     final loginRequest = loginRequestFromJson(jsonString);
 
-import 'dart:convert';
-
 class LoginRequest {
     String username;
     String password;

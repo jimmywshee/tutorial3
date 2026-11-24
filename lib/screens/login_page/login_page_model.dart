@@ -1,67 +1,61 @@
-// ignore_for_file: public_member_api_docs, lines_longer_than_80_chars
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tutorial3/model/login_model.dart';
-import 'package:tutorial3/screens/dashboard_page/dashboard_page_widget.dart';
 import 'package:http/http.dart' as http;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tutorial3/model/login_model.dart';
 
-class LoginPageModel with ChangeNotifier {
-  TextEditingController? usernameController;
-  TextEditingController? passwordController;
-  bool loginFormValid = true;
-  String firstName = "";
+part 'login_page_model.g.dart';
 
-  login(BuildContext context) {
-    print('testing');
-    String username = usernameController!.value.text;
-    String password = passwordController!.value.text;
+class LoginPageState {
+  const LoginPageState({
+    this.loginFormValid = true,
+    this.firstName = '',
+    this.isLoading = false,
+  });
 
+  final bool loginFormValid;
+  final String firstName;
+  final bool isLoading;
+}
+
+@riverpod
+class LoginPageModel extends _$LoginPageModel {
+  @override
+  LoginPageState build() => const LoginPageState();
+
+  Future<bool> login(String username, String password) async {
     if (username.isEmpty || password.isEmpty) {
-      loginFormValid = false;
-    } else {
-      loginFormValid = true;
+      state = const LoginPageState(loginFormValid: false);
+      return false;
     }
-    notifyListeners();
 
-    if (loginFormValid) {
-      Future<LoginResponse> response = performLoginPost(username, password);
-      response.then((value) {
-        print('value'+ value.lastName);
-        if (kDebugMode) {
-          firstName = value.lastName;
-        }
-        notifyListeners();
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const DashboardPage(title: "Dashboard")));
-      }).catchError((error) {
-        if (kDebugMode) {
-          print(error);
-        }
-        loginFormValid = false;
-        notifyListeners();
-      });
+    state = const LoginPageState(isLoading: true);
+    try {
+      final response = await performLoginPost(username, password);
+      state = LoginPageState(firstName: response.firstName);
+      return true;
+    } catch (_) {
+      state = const LoginPageState(loginFormValid: false);
+      return false;
     }
   }
 
   Future<LoginResponse> performLoginPost(
-      String username, String password) async {
-    http.Response response = await http.post(
+    String username,
+    String password,
+  ) async {
+    final response = await http.post(
       Uri.parse('https://dummyjson.com/auth/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(
-          LoginRequest(username: username, password: password).toJson()),
+        LoginRequest(username: username, password: password).toJson(),
+      ),
     );
     if (response.statusCode == 200) {
       return LoginResponse.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception("Failed to perform login, ${response.body}");
     }
+    throw Exception('Failed to perform login, ${response.body}');
   }
 }
